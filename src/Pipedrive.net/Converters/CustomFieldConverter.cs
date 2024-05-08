@@ -152,7 +152,6 @@ namespace Pipedrive.Internal
                             break;
                         case JTokenType.Null:
                         case JTokenType.Undefined:
-                            customFields.Add(property.Name, null);
                             break;
                     }
                 }
@@ -180,6 +179,8 @@ namespace Pipedrive.Internal
 
                 var property_name = property.PropertyName;
                 var property_value = property.ValueProvider.GetValue(value);
+
+                if (property_value == null) continue;
 
                 writer.WritePropertyName(property_name);
                 if (property.Converter != null && property.Converter.CanWrite)

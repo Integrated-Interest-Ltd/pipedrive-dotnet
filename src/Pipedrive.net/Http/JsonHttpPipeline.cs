@@ -28,7 +28,14 @@ namespace Pipedrive.Internal
             if (request.Method == HttpMethod.Get || request.Body == null) return;
             if (request.Body is string || request.Body is Stream || request.Body is HttpContent) return;
 
-            request.Body = JsonConvert.SerializeObject(request.Body, Formatting.None, new CustomFieldConverter());
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            settings.Converters.Add(new CustomFieldConverter());
+
+            request.Body = JsonConvert.SerializeObject(request.Body, Formatting.None, settings);
         }
 
         public IApiResponse<T> DeserializeResponse<T>(IResponse response)
